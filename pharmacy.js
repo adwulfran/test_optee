@@ -13,23 +13,24 @@ export class Pharmacy {
 
   updateBenefitValue() {
     this.drugs.forEach(drug => {
-      if (this.hasSpecificRules(drug.name)) {
-        this[`update${drug.name.replace(/ /g, "")}`](drug);
-      } else {
+      if (this.isNormalDrug(drug.name)) {
         if (drug.expiresIn > 0) {
           this.decreased(drug, 1);
         } else {
           this.decreased(drug, 2);
         }
         drug.expiresIn--;
+
+      } else {
+        this[`update${drug.name.replace(/ /g, "")}`](drug);
       }
     });
 
     return this.drugs;
   }
 
-  hasSpecificRules(drugName) {
-    return ["Herbal Tea", "Magic Pill", "Fervex", "Dafalgan"].includes(drugName);
+  isNormalDrug(drugName) {
+    return !["Herbal Tea", "Magic Pill", "Fervex", "Dafalgan"].includes(drugName);
   }
 
   between(value, min, max) {
